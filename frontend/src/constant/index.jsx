@@ -4,6 +4,8 @@ import { Fingerprint } from "lucide-react";
 import { ShieldHalf } from "lucide-react";
 import { PlugZap } from "lucide-react";
 import { GlobeLock } from "lucide-react";
+import { HiOutlineChatAlt2, HiShieldCheck, HiClock, HiUsers, HiStar } from "react-icons/hi";
+import { MdAttachMoney } from "react-icons/md";
 
 import user1 from "../assets/images/profile-pictures/user1.jpg";
 import user2 from "../assets/images/profile-pictures/user2.jpg";
@@ -13,6 +15,9 @@ import user5 from "../assets/images/profile-pictures/user5.jpg";
 import user6 from "../assets/images/profile-pictures/user6.jpg";
 
 export const navItems = [
+  { label: "How it works", href: "#"},
+  { label: "Services", href: "#"},
+  { label: "Help", href: "#"},
   { label: "Parters", href: "#",
     submenu: [
       { label: "Publisher", href: "#" },
@@ -25,6 +30,50 @@ export const navItems = [
       { label: "Brands & Agencies", href: "#" },
     ]
    },
+];
+
+export const services = [
+    { icon: '🔧', title: 'Home Repairs' },
+    { icon: '🐾', title: 'Pet Care' },
+    { icon: '🛒', title: 'Errands & Delivery' },
+    { icon: '🌿', title: 'Lawn & Garden' },
+    { icon: '🚗', title: 'Transportation' },
+    { icon: '👶', title: 'Childcare' },
+    { icon: '🏠', title: 'House Sitting' },
+    { icon: '💻', title: 'Tech Support' },
+];
+
+export const features = [
+  {
+    icon: <HiShieldCheck />,
+    title: 'Verified & Trusted',
+    description: 'All helpers are background-checked and verified by our community.'
+  },
+  {
+    icon: <HiClock />,
+    title: 'Quick Response',
+    description: 'Get connected with available neighbors in minutes, not days.'
+  },
+  {
+    icon: <HiUsers />,
+    title: 'Local Community',
+    description: 'Work with neighbors in your immediate area who understand your community.'
+  },
+  {
+    icon: <HiStar />,
+    title: 'Quality Guaranteed',
+    description: 'Rate and review every interaction. Our rating system ensures you get excellent service.'
+  },
+  {
+    icon: <MdAttachMoney />,
+    title: 'Fair Pricing',
+    description: 'Transparent, competitive rates set by helpers themselves.'
+  },
+  {
+    icon: <HiOutlineChatAlt2 />,
+    title: 'Easy Communication',
+    description: 'Built-in messaging system keeps all communication secure.'
+  },
 ];
 
 export const testimonials = [
@@ -63,45 +112,6 @@ export const testimonials = [
     company: "Synergy Systems",
     image: user6,
     text: "The team went above and beyond to ensure our project was a success. Their expertise and dedication are unmatched. I look forward to working with them again in the future.",
-  },
-];
-
-export const features = [
-  {
-    icon: <BotMessageSquare />,
-    text: "Drag-and-Drop Interface",
-    description:
-      "Easily design and arrange your VR environments with a user-friendly drag-and-drop interface.",
-  },
-  {
-    icon: <Fingerprint />,
-    text: "Multi-Platform Compatibility",
-    description:
-      "Build VR applications that run seamlessly across multiple platforms, including mobile, desktop, and VR headsets.",
-  },
-  {
-    icon: <ShieldHalf />,
-    text: "Built-in Templates",
-    description:
-      "Jumpstart your VR projects with a variety of built-in templates for different types of applications and environments.",
-  },
-  {
-    icon: <BatteryCharging />,
-    text: "Real-Time Preview",
-    description:
-      "Preview your VR application in real-time as you make changes, allowing for quick iterations and adjustments.",
-  },
-  {
-    icon: <PlugZap />,
-    text: "Collaboration Tools",
-    description:
-      "Work together with your team in real-time on VR projects, enabling seamless collaboration and idea sharing.",
-  },
-  {
-    icon: <GlobeLock />,
-    text: "Analytics Dashboard",
-    description:
-      "Gain valuable insights into user interactions and behavior within your VR applications with an integrated analytics dashboard.",
   },
 ];
 
