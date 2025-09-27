@@ -1,3 +1,7 @@
 @import "tailwindcss/preflight";
 @import "tailwindcss/utilities";
 @import "tailwindcss";
+
+body {
+  @apply bg-[#ededed] font-sans;
+}
