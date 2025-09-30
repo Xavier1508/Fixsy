@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import { navItems } from '../constant/index.jsx'
 import logoImg from '../assets/images/logo.png';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [openDropdown, setOpenDropdown] = useState(null);
@@ -39,8 +40,8 @@ const Navbar = () => {
           </ul>
 
           <div className="hidden lg:flex justify-center space-x-7 items-center">
-            <a href="#" className="text-xl py-2 px-5 border rounded-md font-semibold bg-[#7abbe6] hover:bg-sky-500 text-white">Log in</a>
-            <a href="#" className="text-xl py-2 px-5 border rounded-md font-semibold text-white bg-[#3a9bdc] hover:bg-sky-500">Sign up</a>
+            <Link to="/login" className="text-xl py-2 px-5 border rounded-md font-semibold bg-[#7abbe6] hover:bg-sky-500 text-white">Login</Link>
+            <Link to="/register" className="text-xl py-2 px-5 border rounded-md font-semibold text-white bg-[#3a9bdc] hover:bg-sky-500">Sign up</Link>
           </div>
 
         </div>
