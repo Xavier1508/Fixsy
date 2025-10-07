@@ -13,6 +13,12 @@ import user3 from "../assets/images/profile-pictures/user3.jpg";
 import user4 from "../assets/images/profile-pictures/user4.jpg";
 import user5 from "../assets/images/profile-pictures/user5.jpg";
 import user6 from "../assets/images/profile-pictures/user6.jpg";
+import user0 from "../assets/images/profile-pictures/tuanMuda.jpg";
+
+export const profile=[
+    { name: "Tuan Aqil", email:"aqilmafia@gmail.com", phone:"08123456789", address:"Jl. Amba 6090, Ohio", profilePicture: user0 },
+
+]
 
 export const navItems = [
   { label: "How it works", href: "#"},
