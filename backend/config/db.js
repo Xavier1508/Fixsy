@@ -1,4 +1,3 @@
-// backend/config/db.js
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
@@ -10,7 +9,7 @@ const connectDB = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log(`MongoDB Terhubung: ${conn.connection.host}`);
+    console.log(`MongoDB Connected Succesfully: ${conn.connection.host}`);
   } catch (error) {
     console.error(`Error: ${error.message}`);
     process.exit(1);

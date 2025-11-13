@@ -17,7 +17,7 @@ const LeftSidebar = ({ onOpenCreatePost }) => {
   const location = useLocation();
 
 return (
-    <aside className="hidden md:block w-64 bg-white pt-0.7 px-4 pb-4 sticky top-0 h-screen border-r border-gray-200 flex-col">
+    <aside className="hidden md:block w-64 bg-white pt-0.7 px-4 pb-4 sticky top-0 h-screen flex-col">
       <div className="flex items-center flex-shrink-0 h-15 -mx-4 px-4 mb-9">
         <img className="h-11 w-auto mr-1.5" src={logoImg} alt="Fixsy Logo" />
         <Link to="/dashboard" className="font-bold text-4xl text-[#3a9bdc]">Fixsy</Link>

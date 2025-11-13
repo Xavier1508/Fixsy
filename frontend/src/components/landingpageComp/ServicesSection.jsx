@@ -15,7 +15,7 @@ const ServicesSection = () => {
                     </div>
                 ))}
             </div>
-            <p className="mt-12 text-gray-700">Don't see what you need? <a href="#" className="font-bold text-green-600 hover:underline">Ask anyway!</a> Our community is full of helpful neighbors.</p>
+            <p className="mt-12 text-gray-700">Don't see what you need? <a href="#" className="font-bold text-white hover:underline">Ask anyway!</a> Our community is full of helpful neighbors.</p>
         </div>
     </section>
   )
