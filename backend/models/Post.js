@@ -1,21 +1,14 @@
+// backend/models/Post.js
 import mongoose from 'mongoose';
 
 const commentSchema = mongoose.Schema(
+  // ... (skema komentar Anda tetap sama)
   {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: 'User',
-    },
-    text: {
-      type: String,
-      required: true,
-    },
-    name: { type: String }, // Untuk menyimpan nama user, agar tidak perlu populate
+    user: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
+    text: { type: String, required: true },
+    name: { type: String },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 const postSchema = mongoose.Schema(
@@ -23,33 +16,45 @@ const postSchema = mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: 'User', // Relasi ke model User
+      ref: 'User',
     },
     content: {
       type: String,
-      required: true,
+      required: false, // Diubah: Postingan bisa hanya gambar
     },
     postType: {
       type: String,
       required: true,
-      default: 'text', // Sesuai modal 'Create something'
+      default: 'text',
       enum: ['text', 'sell', 'event', 'poll', 'treat'],
     },
     media: [
       {
-        type: String, // Nanti kita simpan URL gambar/video di sini
+        type: String, // Menyimpan path ke file, misal: /uploads/media-12345.png
       },
     ],
+    // --- TAMBAHAN BARU ---
+    location: {
+      type: String,
+      trim: true,
+    },
+    tags: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User', // Untuk @mention pengguna lain
+      },
+    ],
+    // --- AKHIR TAMBAHAN ---
     likes: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // Siapa saja yang like
+        ref: 'User',
       },
     ],
-    comments: [commentSchema], // Menggunakan sub-document
+    comments: [commentSchema],
   },
   {
-    timestamps: true, // Otomatis menambah createdAt dan updatedAt
+    timestamps: true,
   }
 );
 

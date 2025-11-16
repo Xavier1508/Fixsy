@@ -4,7 +4,14 @@ const router = express.Router();
 import { createPost, getPosts } from '../controllers/postController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
-// Gunakan 'protect' untuk semua rute di sini
-router.route('/').post(protect, createPost).get(protect, getPosts);
+// 1. Impor middleware upload
+import upload from '../middleware/uploadMiddleware.js';
+
+// 2. Terapkan 'upload.single('media')' HANYA ke rute createPost
+// 'media' adalah nama field yang harus dikirim dari frontend
+router
+  .route('/')
+  .post(protect, upload.single('media'), createPost) // Diubah
+  .get(protect, getPosts); // Tetap sama
 
 export default router;

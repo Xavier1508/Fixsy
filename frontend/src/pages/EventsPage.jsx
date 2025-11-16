@@ -36,9 +36,6 @@ const EventsPage = () => {
           </button>
         </nav>
       </div>
-
-      {/* Tampilkan grid acara */}
-      {/* SEKARANG TIDAK PERLU PROPS: EventGrid akan mengambil state dari Context */}
       <EventGrid />
       
     </div>
