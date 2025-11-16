@@ -1,67 +1,39 @@
-import React, { useState } from 'react';
-import EventGrid from '../components/eventsComp/EventGrid.jsx';
-import YourEvents from '../components/eventsComp/YourEvents.jsx';
+import React, { useEffect } from 'react';
+import GroupCard from '../components/groupsComp/GroupCard.jsx';
+import { Plus } from 'lucide-react';
+import RightSidebar from '../components/dashboardComp/RightSidebar.jsx';
 
-const EventsPage = () => {
-  const [viewMode, setViewMode] = useState('grid');
-  
-  // --- PERUBAHAN DI SINI ---
-  // 1. Menambahkan state untuk mengelola status RSVP dari semua event di grid
-  //    Contoh: { 1: 'interested', 2: 'going' }
-  const [rsvpStates, setRsvpStates] = useState({});
+// Data Dummy
+const dummyGroups = [
+  { id: 1, name: 'COVID-19 vaccines in the Capital Regi...', members: 1081, image: 'https://placehold.co/80x80/dbeafe/2563eb?text=C19' },
+  { id: 2, name: 'Veterans and Military Families of the...', members: 1081, image: 'https://placehold.co/80x80/fee2e2/b91c1c?text=VETS' },
+  { id: 3, name: 'Shopping Help for Neighbors - Walma...', members: 2669, image: 'https://placehold.co/80x80/ecfccb/4d7c0f?text=SHOP' },
+  { id: 4, name: 'Ashuelot ADUs', members: 7, image: 'https://placehold.co/80x80/ffe4e6/9f1239?text=ADU' },
+  { id: 5, name: 'Shopping Help for Neighbors - Walma...', members: 2669, image: 'https://placehold.co/80x80/ecfccb/4d7c0f?text=SHOP' },
+  { id: 6, name: 'Ashuelot ADUs', members: 7, image: 'https://placehold.co/80x80/ffe4e6/9f1239?text=ADU' },
+];
 
-  // 2. Menambahkan handler untuk memperbarui state
-  const handleRsvpChange = (eventId, newStatus) => {
-    // Jika status "Not interested", kita reset jadi null agar tombol kembali ke awal
-    const finalStatus = newStatus === 'not_interested' ? null : newStatus;
-    
-    setRsvpStates(prevStates => ({
-      ...prevStates,
-      [eventId]: finalStatus,
-    }));
-    // Di sini Anda akan memanggil API backend untuk menyimpan perubahan
-    console.log(`Event ${eventId} status changed to ${finalStatus}`);
-  };
-  // --- AKHIR PERUBAHAN ---
-
-  if (viewMode === 'list') {
-    return (
-      <YourEvents onBack={() => setViewMode('grid')} />
-    );
-  }
-
+const GroupsPage = () => {
   return (
-    <div className="w-full max-w-7xl mx-auto py-6">
-      
-      <div className="flex items-center min-h-10 mb-4">
-        <h1 className="text-xl font-bold text-gray-900">Events near you</h1>
-      </div>
-
-      <div className="border-b border-gray-200 mb-8">
-        <div className="flex items-center space-x-2">
-          <button 
-            className="py-2 px-3 text-sm font-medium text-blue-600 border-b-2 border-blue-600"
-          >
-            All Events
-          </button>
-          <button 
-            onClick={() => setViewMode('list')}
-            className="py-2 px-3 text-sm font-medium text-gray-600 hover:text-gray-900"
-          >
-            Your events
+    <div className="flex justify-center w-full max-w-5xl mx-auto">
+      <main className="flex-1 max-w-2xl">
+        <div className="flex items-center justify-between pt-6 mb-5">
+          <h1 className="text-xl font-bold text-gray-900">Groups</h1>
+          <button className="flex items-center space-x-1.5 bg-gray-800 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-gray-900">
+            <Plus className="h-4 w-4" />
+            <span>Create</span>
           </button>
         </div>
-      </div>
-
-      {/* Tampilkan grid acara */}
-      {/* 3. Kirim state dan handler ke EventGrid sebagai props */}
-      <EventGrid 
-        rsvpStates={rsvpStates}
-        onRsvpChange={handleRsvpChange}
-      />
-      
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">Groups near you</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {dummyGroups.map(group => (
+            <GroupCard key={group.id} group={group} />
+          ))}
+        </div>
+      </main>
+      <RightSidebar />
     </div>
   );
 };
 
-export default EventsPage;
+export default GroupsPage;

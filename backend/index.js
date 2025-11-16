@@ -7,15 +7,12 @@ import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import postRoutes from './routes/postRoutes.js';
 import businessRoutes from './routes/businessRoutes.js';
-import chatRoutes from './routes/chatRoutes.js'; // Pastikan ini juga diimport
+import chatRoutes from './routes/chatRoutes.js';
 
 dotenv.config();
 connectDB();
 
-// PINDAHKAN INI KE ATAS
 const app = express();
-
-// Middleware sekarang di bawahnya
 app.use(cors());
 app.use(express.json());
 
@@ -28,9 +25,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/business', businessRoutes);
-app.use('/api/chat', chatRoutes); // Pastikan ini juga dipakai
+app.use('/api/chat', chatRoutes);
 
-// Error Handling (Middleware)
 app.use((err, req, res, next) => {
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   res.status(statusCode);

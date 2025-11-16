@@ -14,7 +14,7 @@ const MainFeed = ({ onOpenCreatePost }) => {
 
   return (
     <div>
-      <div className="bg-white rounded-lg shadow border p-4 mb-5"> {/* UBAH: mb-6 -> mb-5 */}
+      <div className="bg-white rounded-lg shadow border p-4 mb-5">
         <div className="flex items-center space-x-3">
           <div className="h-9 w-9 rounded-full bg-gray-300 flex-shrink-0"></div>
           <button 

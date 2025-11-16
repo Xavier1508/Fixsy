@@ -1,10 +1,10 @@
-// frontend/src/components/dashboardComp/CreatePost.jsx
 import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import { X, Globe, Image, MapPin, AtSign, ShoppingBag, Calendar, BarChart } from 'lucide-react';
 import { GiPumpkin } from "react-icons/gi";
 
 const CreatePost = ({ onClose }) => {
-  const [postType, setPostType] = useState('text'); // 'text', 'sell', 'event', 'poll'
+  const [postType, setPostType] = useState('text');
 
   const PostTypeButton = ({ icon: Icon, label, type }) => (
     <button 
@@ -18,8 +18,8 @@ const CreatePost = ({ onClose }) => {
     </button>
   );
 
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-4">
+  return ReactDOM.createPortal(
+    <div className="fixed inset-0 bg-[rgba(0,0,0,0.6)] z-50 flex items-center justify-center p-4">
       {/* Modal Content */}
       <div className="bg-white rounded-lg shadow-2xl w-full max-w-4xl grid grid-cols-1 md:grid-cols-3">
         
@@ -76,7 +76,8 @@ const CreatePost = ({ onClose }) => {
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.getElementById('modal-root')
   );
 };
 

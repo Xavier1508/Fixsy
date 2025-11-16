@@ -1,14 +1,10 @@
 // backend/controllers/businessController.js
 import Business from '../models/Business.js';
 
-// @desc    Membuat Halaman Bisnis baru
-// @route   POST /api/business
-// @access  Private
 const createBusinessPage = async (req, res) => {
   const { name, category, address, phone, contactEmail } = req.body;
 
   try {
-    // Cek apakah user sudah punya halaman bisnis
     const existingBusiness = await Business.findOne({ owner: req.user._id });
 
     if (existingBusiness) {

@@ -4,11 +4,11 @@ import { Home, Tag, Newspaper, Heart, MapPin, Users, Calendar } from 'lucide-rea
 import logoImg from '../../assets/images/logo.png';
 
 const navLinks = [
-  { icon: Home, label: 'Home', href: '/dashboard' },
+  { icon: Home, label: 'Home', href: '/dashboard/home' },
   { icon: Tag, label: 'For Sale & Free', href: '/dashboard/forsale' },
   { icon: Newspaper, label: 'Local News', href: '/dashboard/news' },
   { icon: Heart, label: 'Faves', href: '/dashboard/faves' },
-  { icon: MapPin, label: 'Treat Map', href: '/dashboard/map' },
+  { icon: MapPin, label: 'Treat Map', href: '/dashboard/treatmaps' },
   { icon: Users, label: 'Groups', href: '/dashboard/groups' },
   { icon: Calendar, label: 'Events', href: '/dashboard/events' },
 ];
@@ -48,11 +48,11 @@ return (
       >
         Post
       </button>
-      <div className="absolute bottom-4 left-4 text-sm text-gray-500 space-y-1">
-        <Link to="/settings" className="block hover:underline">Settings</Link>
-        <Link to="/help" className="block hover:underline">Help Center</Link>
-        <Link to="/invite" className="block hover:underline">Invite neighbors</Link>
-      </div>
+        <div className="absolute bottom-4 left-4 text-sm text-gray-500 space-y-1">
+          <Link to="/dashboard/settings" className="block hover:underline">Settings</Link>
+          <Link to="/dashboard/help" className="block hover:underline">Help Center</Link>
+          <Link to="/dashboard/invite" className="block hover:underline">Invite neighbors</Link>
+        </div>
     </aside>
   );
 };

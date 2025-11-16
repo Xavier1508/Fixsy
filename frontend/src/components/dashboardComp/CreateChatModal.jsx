@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import { X, Search } from 'lucide-react';
 
 const neighbors = [
@@ -17,9 +18,9 @@ const CreateChatModal = ({ onClose }) => {
     );
   };
 
-  return (
+  return ReactDOM.createPortal(
     // Backdrop
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 bg-[rgba(0,0,0,0.6)] z-50 flex items-center justify-center p-4">
       {/* Modal */}
       <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
         {/* Header */}
@@ -81,7 +82,8 @@ const CreateChatModal = ({ onClose }) => {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.getElementById('modal-root')
   );
 };
 
