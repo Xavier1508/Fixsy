@@ -14,7 +14,6 @@ const DashboardPage = () => {
   const handleOpenPostModal = () => setIsCreatePostOpen(true);
 
   return (
-    // 2. Bungkus semua provider dengan SocketProvider
     <SocketProvider>
       <div className="flex h-screen bg-gray-100">
         <LeftSidebar onOpenCreatePost={handleOpenPostModal} />

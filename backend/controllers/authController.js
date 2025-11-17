@@ -27,7 +27,14 @@ const registerUser = async (req, res) => {
       res.status(201).json({
         _id: user._id,
         firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
+        phoneNumber: user.phoneNumber,
+        profilePicture: user.profilePicture,
+        coverPhoto: user.coverPhoto,
+        bio: user.bio,
+        location: user.location,
+        interests: user.interests,
         token: generateToken(user._id),
       });
     } else {
@@ -51,7 +58,14 @@ const loginUser = async (req, res) => {
       res.json({
         _id: user._id,
         firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
+        phoneNumber: user.phoneNumber,
+        profilePicture: user.profilePicture,
+        coverPhoto: user.coverPhoto,
+        bio: user.bio,
+        location: user.location,
+        interests: user.interests,
         token: generateToken(user._id),
       });
     } else {

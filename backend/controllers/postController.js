@@ -59,7 +59,7 @@ const getPosts = async (req, res) => {
   // Fungsi ini tidak perlu diubah, sudah sempurna.
   try {
     const posts = await Post.find({})
-      .populate('user', 'firstName lastName') 
+      .populate('user', 'firstName lastName profilePicture') 
       .sort({ createdAt: -1 });
 
     res.json(posts);

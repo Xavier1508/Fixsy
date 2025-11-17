@@ -2,18 +2,31 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Search, Bell, MessageSquare, LogOut, Briefcase, User as UserIcon, ChevronDown } from 'lucide-react';
 
-// 1. Header SEKARANG MENERIMA 'dynamicContent'
+const BACKEND_URL = 'http://localhost:5000';
+
 const DashboardHeader = ({ dynamicContent }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
 
-  // ... (SEMUA LOGIC DROPDOWN ANDA TETAP SAMA) ...
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const userInitial = userInfo?.firstName ? userInfo.firstName.charAt(0).toUpperCase() : 'X';
-  const handleSignOut = () => { /* ... */ };
-  useEffect(() => { /* ... */ }, [dropdownRef]);
+  const userAvatar = userInfo?.profilePicture ? `${BACKEND_URL}${userInfo.profilePicture}` : null;
 
+  const handleSignOut = () => {
+    localStorage.removeItem('userInfo');
+    navigate('/login');
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [dropdownRef]);
 
   return (
     // 2. Header DIBUAT STICKY DAN CLEAN (border-b)
@@ -50,9 +63,13 @@ const DashboardHeader = ({ dynamicContent }) => {
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="flex items-center"
               >
-                <span className="h-10 w-10 rounded-full bg-blue-200 flex items-center justify-center text-blue-700 font-semibold text-lg">
-                  {userInitial}
-                </span>
+                {userAvatar ? (
+                  <img src={userAvatar} alt="Profile" className="h-10 w-10 rounded-full object-cover" />
+                ) : (
+                  <span className="h-10 w-10 rounded-full bg-blue-200 flex items-center justify-center text-blue-700 font-semibold text-lg">
+                    {userInitial}
+                  </span>
+                )}
                 <span className="relative -ml-3 h-5 w-5 bg-white rounded-full border border-gray-300 flex items-center justify-center shadow-sm">
                   <ChevronDown className="h-3 w-3 text-gray-600" />
                 </span>
@@ -60,12 +77,15 @@ const DashboardHeader = ({ dynamicContent }) => {
               
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl overflow-hidden border">
-                  {/* ... (isi dropdown tetap sama) ... */}
                   <div className="p-4 border-b">
                     <div className="flex items-center space-x-3">
-                      <div className="h-12 w-12 rounded-full bg-blue-200 flex items-center justify-center text-blue-700 font-semibold text-xl">
-                         {userInitial}
-                      </div>
+                      {userAvatar ? (
+                        <img src={userAvatar} alt="Profile" className="h-12 w-12 rounded-full object-cover" />
+                      ) : (
+                        <div className="h-12 w-12 rounded-full bg-blue-200 flex items-center justify-center text-blue-700 font-semibold text-xl">
+                          {userInitial}
+                        </div>
+                      )}
                       <div>
                         <h4 className="font-semibold text-gray-800">{userInfo?.firstName || 'User'}</h4>
                         <p className="text-sm text-gray-500">Pleasant and High</p>
@@ -73,11 +93,12 @@ const DashboardHeader = ({ dynamicContent }) => {
                     </div>
                   </div>
                   <nav className="py-2">
-                    <Link to="/profile" onClick={() => setIsDropdownOpen(false)} className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    <Link 
+                      to="/dashboard/profile" 
+                      onClick={() => setIsDropdownOpen(false)} 
+                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
                       <UserIcon className="h-5 w-5 mr-3" /> View profile
-                    </Link>
-                    <Link to="/business/create" onClick={() => setIsDropdownOpen(false)} className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      <Briefcase className="h-5 w-5 mr-3" /> Add business page
                     </Link>
                     <button 
                       onClick={handleSignOut}

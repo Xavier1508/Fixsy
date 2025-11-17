@@ -8,34 +8,33 @@ import userRoutes from './routes/userRoutes.js';
 import postRoutes from './routes/postRoutes.js';
 import businessRoutes from './routes/businessRoutes.js';
 import chatRoutes from './routes/chatRoutes.js';
+import forSaleRoutes from './routes/forSaleRoutes.js'; // Dari langkah sebelumnya
+import eventRoutes from './routes/eventRoutes.js';
 import http from 'http';
 import { Server } from 'socket.io';
-
-// --- TAMBAHAN BARU (Untuk __dirname di ES Modules) ---
 import path from 'path';
 import { fileURLToPath } from 'url';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-// --- AKHIR TAMBAHAN ---
 
 dotenv.config();
 connectDB();
 
 const app = express();
-const corsOptions = { /* ... (tetap sama) ... */ };
+const corsOptions = {
+  origin: 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+};
 
 app.use(cors(corsOptions));
 app.use(express.json());
-
-// --- TAMBAHAN BARU (Untuk menangani form data) ---
 app.use(express.urlencoded({ extended: true }));
 
-// --- TAMBAHAN BARU (Menyajikan folder 'uploads' secara statis) ---
-// Ini membuat file di 'backend/uploads' bisa diakses
-// dari URL 'http://localhost:5000/uploads/namafile.png'
+// ... (Konfigurasi 'uploads' statis Anda tetap sama) ...
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
-// --- Setup Socket.io (TETAP SAMA) ---
+// ... (Konfigurasi Socket.io Anda tetap sama) ...
 const httpServer = http.createServer(app);
 const io = new Server(httpServer, { cors: corsOptions });
 app.use((req, res, next) => {
@@ -43,24 +42,26 @@ app.use((req, res, next) => {
   next();
 });
 io.on('connection', (socket) => {
-  console.log(`Socket terhubung: ${socket.id}`);
-  socket.on('disconnect', () => { /* ... */ });
+  /* ... */
 });
-// --- Akhir Setup Socket.io ---
 
-// --- Routes (TETAP SAMA) ---
+// --- Routes ---
 app.get('/', (req, res) => {
   res.send('API Fixsy sedang berjalan...');
 });
+
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/business', businessRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/forsale', forSaleRoutes);
+app.use('/api/events', eventRoutes);
 
-// --- Error Handler (TETAP SAMA) ---
-app.use((err, req, res, next) => { /* ... */ });
-
+// ... (Error Handler dan httpServer.listen Anda tetap sama) ...
+app.use((err, req, res, next) => {
+  /* ... */
+});
 const PORT = process.env.PORT || 5000;
 httpServer.listen(PORT, () =>
   console.log(`Server berjalan di mode ${process.env.NODE_ENV} pada port ${PORT}`)

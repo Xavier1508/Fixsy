@@ -3,6 +3,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 
+import BannerBusinessImage from '../../assets/images/banner-image/image_11.jpg';
+
 const HomeRightSidebar = () => (
   <>
     {/* Kartu Peringatan */}
@@ -13,8 +15,8 @@ const HomeRightSidebar = () => (
 
     {/* Kartu "Own a local business?" */}
     <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
-      <div className="w-full h-28 bg-gray-200 flex items-center justify-center">
-        <span className="text-gray-500 text-sm">(Business Image Placeholder)</span>
+      <div className="w-full h-50 bg-gray-200 flex items-center justify-center">
+        <img src={BannerBusinessImage} alt="Business Banner"className="w-full h-full object-cover"/>
       </div>
       <div className="p-4">
         <h3 className="font-semibold text-gray-800 mb-2">Own a local business?</h3>

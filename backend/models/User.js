@@ -25,13 +25,37 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    
+    profilePicture: {
+      type: String,
+      default: '', // Nanti kita isi path default dari frontend/placeholder
+    },
+    coverPhoto: {
+      type: String,
+      default: '', // Nanti kita isi path default dari frontend/placeholder
+    },
+    bio: {
+      type: String,
+      trim: true,
+      default: '',
+    },
+    location: {
+      type: String,
+      trim: true,
+      default: '',
+    },
+    interests: [
+      {
+        type: String,
+        trim: true,
+      },
+    ],
   },
   {
     timestamps: true,
   }
 );
 
-// Enkripsi password sebelum disimpan
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
     next();
@@ -40,7 +64,6 @@ userSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, salt);
 });
 
-// Metode untuk mencocokkan password
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };

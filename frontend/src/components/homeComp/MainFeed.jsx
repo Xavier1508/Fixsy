@@ -12,7 +12,6 @@ const MainFeed = ({ onOpenCreatePost }) => {
   const socket = useSocket();
   useEffect(() => {
     const fetchPosts = async () => {
-      // Ambil token dari localStorage
       const userInfo = JSON.parse(localStorage.getItem('userInfo'));
       const token = userInfo ? userInfo.token : null;
 
@@ -62,7 +61,6 @@ const MainFeed = ({ onOpenCreatePost }) => {
     };
   }, [socket]); // Jalankan ulang efek ini jika 'socket' berubah
 
-  // ... (JSX untuk 'Create Post' box tetap sama) ...
   const createPostBox = (
       <div className="bg-white rounded-lg shadow border p-4 mb-5">
         <div className="flex items-center space-x-3">
@@ -114,7 +112,6 @@ const tabs = (
     </div>
   );
 
-  // 5. Render konten berdasarkan status loading/error
   let content;
   if (isLoading) {
     content = <p className="text-gray-500 text-center">Loading posts...</p>;

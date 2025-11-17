@@ -1,16 +1,15 @@
-// frontend/src/components/homeComp/PostCard.jsx
 import React from 'react';
 import { ThumbsUp, MessageSquare, Send, MoreHorizontal, MapPin } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
-// 1. Definisikan URL backend Anda di satu tempat
-// Ini adalah tempat server Anda menyajikan folder 'uploads'
 const BACKEND_URL = 'http://localhost:5000';
 
 const PostCard = ({ post }) => {
-  const user = post.user || { firstName: 'User', lastName: 'Name' };
+  const user = post.user || { firstName: 'User', lastName: 'Name', profilePicture: null };
   const userName = `${user.firstName} ${user.lastName}`;
+  
   const userInitial = user.firstName ? user.firstName.charAt(0) : '?';
+  const userAvatar = user.profilePicture ? `${BACKEND_URL}${user.profilePicture}` : null;
   
   const timeAgo = post.createdAt
     ? formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })
@@ -21,9 +20,14 @@ const PostCard = ({ post }) => {
       {/* Header Postingan */}
       <div className="flex items-center justify-between p-4 border-b">
         <div className="flex items-center space-x-3">
-          <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center font-semibold text-gray-600">
-            {userInitial}
-          </div>
+          {/* --- AVATAR DINAMIS POSTER --- */}
+          {userAvatar ? (
+            <img src={userAvatar} alt={userName} className="h-10 w-10 rounded-full object-cover" />
+          ) : (
+            <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center font-semibold text-gray-600">
+              {userInitial}
+            </div>
+          )}
           <div>
             <h4 className="font-semibold text-gray-800">{userName}</h4>
             <div className="flex items-center space-x-1.5 text-sm text-gray-500">
@@ -53,7 +57,6 @@ const PostCard = ({ post }) => {
           <p className="text-gray-700 mb-4">{post.content}</p>
         )}
         
-        {/* 4. TAMPILKAN GAMBAR JIKA ADA */}
         {post.media && post.media.length > 0 && (
           <div className="mt-2">
             <img 

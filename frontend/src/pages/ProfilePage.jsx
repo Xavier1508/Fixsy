@@ -1,12 +1,10 @@
+// frontend/src/pages/ProfilePage.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import { Settings, Camera, User as UserIcon, Briefcase, PlusCircle, Bookmark, CalendarCheck, MapPin, Hash, Users, Heart } from 'lucide-react'; // Saya juga tambahkan 'Heart' yang mungkin Anda perlukan
 
-import LeftSidebar from '../components/dashboardComp/LeftSidebar.jsx'; // Sidebar DENGAN logo
-import DashboardHeader from '../components/dashboardComp/DashboardHeader.jsx'; // Header TANPA logo
-import ChatPopup from '../components/dashboardComp/ChatPopup.jsx';
-
-import { Settings, Camera, User as UserIcon, Briefcase, PlusCircle, Bookmark, CalendarCheck, Heart, Users } from 'lucide-react';
+const BACKEND_URL = 'http://localhost:5000';
 
 function ProfilePage() {
   const [user, setUser] = useState({
@@ -14,68 +12,65 @@ function ProfilePage() {
     lastName: '',
     email: '',
     phoneNumber: '',
-    profilePicture: 'https://via.placeholder.com/100',
-    points: 0, 
-    history: [], 
+    profilePicture: '',
+    coverPhoto: '',
+    bio: '',
+    location: '',
+    interests: [],
   });
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [editForm, setEditForm] = useState({
     firstName: '',
     lastName: '',
-    email: '',
-    phoneNumber: '',
+    bio: '',
+    location: '',
+    interests: '', // Kita gunakan string terpisah koma untuk input
   });
+  
   const [isSettingsDropdownOpen, setIsSettingsDropdownOpen] = useState(false);
   const settingsDropdownRef = useRef(null);
+  const profilePicInputRef = useRef(null);
+  const coverPhotoInputRef = useRef(null);
   
   const navigate = useNavigate();
 
-    useEffect(() => {
-    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+  // Fungsi untuk mengambil token
+  const getToken = () => JSON.parse(localStorage.getItem('userInfo'))?.token;
 
+  // Mengambil data profil saat load
+  useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     if (!userInfo) {
       navigate('/login');
     } else {
-      const fetchProfile = async () => {
-        try {
-          const config = {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${userInfo.token}`,
-            },
-          };
-          
-          const { data } = await axios.get(
-            `http://localhost:5000/api/users/profile`, 
-            config
-          );
-          
-          setUser({ 
-            ...user, 
-            firstName: data.firstName,
-            lastName: data.lastName,
-            email: data.email,
-            phoneNumber: data.phoneNumber,
-            profilePicture: data.profilePicture || 'https://via.placeholder.com/100',
-          });
-          setEditForm({
-            firstName: data.firstName,
-            lastName: data.lastName,
-            email: data.email,
-            phoneNumber: data.phoneNumber,
-          });
-
-        } catch (error) {
-          console.error('Gagal mengambil profile', error);
-          if (error.response && error.response.status === 401) {
-            localStorage.removeItem('userInfo');
-            navigate('/login');
-          }
-        }
-      };
       fetchProfile();
     }
   }, [navigate]);
+
+  const fetchProfile = async () => {
+    const token = getToken();
+    try {
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+      
+      // --- PERBAIKAN 1 ---
+      const { data } = await axios.get(`http://localhost:5000/api/users/profile`, config); // Kurung kurawal '}' ekstra dihapus
+      
+      setUser(data);
+      setEditForm({
+        firstName: data.firstName || '',
+        lastName: data.lastName || '',
+        bio: data.bio || '',
+        location: data.location || '',
+        interests: (data.interests || []).join(', '), // Ubah array jadi string
+      });
+    } catch (error) {
+      console.error('Gagal mengambil profile', error);
+      if (error.response && error.response.status === 401) {
+        localStorage.removeItem('userInfo');
+        navigate('/login');
+      }
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -88,96 +83,184 @@ function ProfilePage() {
   }, []);
 
 
-  const handleEditChange = (e) => {
+const handleEditChange = (e) => {
     const { name, value } = e.target;
     setEditForm({ ...editForm, [name]: value });
   };
 
+  // Menyimpan data PUBLIK (Edit Profile)
   const handleSaveProfile = async () => {
     try {
-      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      const token = getToken();
       const config = {
          headers: {
            'Content-Type': 'application/json',
-           Authorization: `Bearer ${userInfo.token}`,
+           Authorization: `Bearer ${token}`,
          },
       };
+      
+      const interestsArray = editForm.interests.split(',').map(item => item.trim()).filter(Boolean);
+      const dataToUpdate = {
+        firstName: editForm.firstName,
+        lastName: editForm.lastName,
+        bio: editForm.bio,
+        location: editForm.location,
+        interests: interestsArray,
+      };
 
-      const { data } = await axios.put(
+      const { data } = await axios.put( // Kurung kurawal '}' ekstra dihapus
         `http://localhost:5000/api/users/profile`,
-        editForm,
+        dataToUpdate,
         config
       );
       
-      setUser({ ...user, ...data });
-      localStorage.setItem('userInfo', JSON.stringify(data)); 
+      setUser(data);
+      const updatedUserInfo = { ...JSON.parse(localStorage.getItem('userInfo')), ...data };
+      localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo)); 
+      
       setIsEditingProfile(false);
-
     } catch (error) {
        console.error('Gagal update profile', error);
     }
   };
 
+  // Handler untuk upload file
+  const handleFileUpload = async (e, endpoint, fieldName) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append(fieldName, file);
+
+    try {
+      const token = getToken();
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await axios.post( // Kurung kurawal '}' ekstra dihapus
+        `http://localhost:5000/api/users/profile/${endpoint}`,
+        formData,
+        config
+      );
+      
+      const updatedUser = { ...user, [fieldName]: data[fieldName] };
+      setUser(updatedUser);
+      const updatedUserInfo = { ...JSON.parse(localStorage.getItem('userInfo')), [fieldName]: data[fieldName] };
+      localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
+
+    } catch (error) {
+      console.error('Gagal upload file', error);
+    }
+  };
+
+  const defaultCover = "bg-gray-200";
+  const defaultAvatar = null;
 
   return (
-    <div className="flex h-screen bg-gray-100"> {/* UBAH: Hapus flex-col */}
-      <LeftSidebar />
+      <>
+        {/* Input file yang tersembunyi */}
+        <input 
+          type="file" 
+          ref={profilePicInputRef} 
+          className="hidden" 
+          accept="image/*"
+          onChange={(e) => handleFileUpload(e, 'upload-avatar', 'profilePicture')}
+        />
+        <input 
+          type="file" 
+          ref={coverPhotoInputRef} 
+          className="hidden" 
+          accept="image/*"
+          onChange={(e) => handleFileUpload(e, 'upload-cover', 'coverPhoto')}
+        />
 
-      <div className="flex-1 flex flex-col overflow-hidden">
-        
-        <DashboardHeader />
-
-        <div className="flex-1 overflow-y-auto">
-          <main className="w-full max-w-3xl mx-auto p-6">
-            <div className="bg-white rounded-lg shadow-sm border mb-6">
-              <div className="relative h-32 bg-gray-200 rounded-t-lg flex items-end justify-between p-4">
-                <div className="relative -mb-10 left-4">
-                  <div className="h-24 w-24 rounded-full bg-gray-300 border-4 border-white flex items-center justify-center text-gray-600 text-4xl font-semibold">
-                    {user.firstName ? user.firstName.charAt(0) : 'X'}
-                    <button className="absolute bottom-0 right-0 bg-white p-1 rounded-full shadow-md border">
-                      <Camera className="h-5 w-5 text-gray-600" />
-                    </button>
-                  </div>
-                </div>
-                <div className="relative" ref={settingsDropdownRef}>
-                  <button 
-                    onClick={() => setIsSettingsDropdownOpen(!isSettingsDropdownOpen)}
-                    className="p-2 rounded-full bg-white shadow hover:bg-gray-100"
-                  >
-                    <Settings className="h-6 w-6 text-gray-600" />
-                  </button>
-                  {isSettingsDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border overflow-hidden z-10">
-                      <Link to="/settings" className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
-                        Edit Profile Settings
-                      </Link>
+        <main className="w-full max-w-3xl mx-auto">
+          {/* Profile Card Header */}
+          <div className="bg-white rounded-lg shadow-sm border mb-6">
+            <div className={`relative h-49 rounded-t-lg ${!user.coverPhoto && defaultCover}`}>
+              {user.coverPhoto && (
+                <img 
+                  src={`${BACKEND_URL}${user.coverPhoto}`} 
+                  alt="Cover" 
+                  className="w-full h-54 object-cover rounded-t-lg" 
+                />
+              )}
+              <button 
+                onClick={() => coverPhotoInputRef.current.click()}
+                className="absolute top-4 right-4 bg-white p-1 rounded-full shadow-md border"
+              >
+                <Camera className="h-5 w-5 text-gray-600" />
+              </button>
+            </div>
+            <div className="relative flex justify-between p-4 pt-0">
+              <div className="relative -mt-14">
+                <div className="h-32 w-32 rounded-full border-4 border-white text-gray-600 text-4xl font-semibold relative">
+                  {user.profilePicture ? (
+                    <img 
+                      src={`${BACKEND_URL}${user.profilePicture}`} 
+                      alt="Profile" 
+                      className="h-full w-full rounded-full object-cover" 
+                    />
+                  ) : (
+                    <div className="h-full w-full rounded-full bg-gray-300 flex items-center justify-center">
+                      {user.firstName ? user.firstName.charAt(0) : 'X'}
                     </div>
                   )}
+                  <button 
+                    onClick={() => profilePicInputRef.current.click()}
+                    className="absolute bottom-0 right-0 bg-white p-1 rounded-full shadow-md border"
+                  >
+                    <Camera className="h-5 w-5 text-gray-600" />
+                  </button>
                 </div>
               </div>
-              <div className="p-4 pt-16">
-                <h2 className="text-2xl font-bold text-gray-900">
-                  {user.firstName} {user.lastName}
-                </h2>
-                <p className="text-gray-600">Pleasant and High (Dummy)</p>
-                <div className="mt-4 flex space-x-3">
-                  <button 
-                    onClick={() => setIsEditingProfile(true)}
-                    className="flex items-center space-x-2 px-4 py-2 bg-[#e0f2fe] text-[#3a9bdc] rounded-full font-medium hover:bg-[#ccebfd]"
-                  >
-                    <UserIcon className="h-5 w-5" />
-                    <span>Edit profile</span>
-                  </button>
-                  <Link 
-                    to="/business/create"
-                    className="flex items-center space-x-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-full font-medium hover:bg-gray-50"
-                  >
-                    <Briefcase className="h-5 w-5" />
-                    <span>Add business page</span>
-                  </Link>
-                </div>
+              <div className="relative pt-4 translate-y-4" ref={settingsDropdownRef}>
+                <button 
+                  onClick={() => setIsSettingsDropdownOpen(!isSettingsDropdownOpen)}
+                  className="p-2 rounded-full bg-white shadow hover:bg-gray-100 border"
+                >
+                  <Settings className="h-6 w-6 text-gray-600" />
+                </button>
+                {isSettingsDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border overflow-hidden z-10">
+                    <Link to="/dashboard/settings" className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
+                      Edit Profile Settings
+                    </Link>
+                  </div>
+                )}
               </div>
             </div>
+
+              <div className="p-4 pt-0">
+              <h2 className="text-2xl font-bold text-gray-900">
+                {user.firstName} {user.lastName}
+              </h2>
+              <p className="text-gray-600">{user.location || 'Tambahkan lokasi Anda'}</p>
+              <p className="text-gray-800 mt-2">{user.bio || 'Tambahkan bio singkat...'}</p>
+              
+              <div className="mt-4 flex space-x-3">
+                <button 
+                  onClick={() => setIsEditingProfile(true)}
+                  className="flex items-center space-x-2 px-4 py-2 bg-[#e0f2fe] text-[#3a9bdc] rounded-full font-medium hover:bg-[#ccebfd]"
+                >
+                  <UserIcon className="h-5 w-5" />
+                  <span>Edit profile</span>
+                </button>
+
+                <Link 
+                  to="/business/create"
+                  className="flex items-center space-x-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-full font-medium hover:bg-gray-50"
+                >
+                  <Briefcase className="h-5 w-5" />
+                  <span>Add business page</span>
+                </Link>
+              </div>
+            </div>
+          </div>
 
             {/* Bagian Dashboard Progress */}
             <div className="bg-white rounded-lg shadow-sm border p-4 mb-6">
@@ -215,10 +298,22 @@ function ProfilePage() {
                 <CalendarCheck className="h-5 w-5" /> <span>Events (0)</span>
               </Link>
             </div>
+
             <div className="bg-white rounded-lg shadow-sm border p-4 mb-6">
               <h3 className="text-lg font-semibold text-gray-800 mb-2">Interests</h3>
-              <p className="text-gray-500">No interests added yet.</p>
+              {user.interests && user.interests.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {user.interests.map(interest => (
+                    <span key={interest} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium">
+                      {interest}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-500">No interests added yet.</p>
+              )}
             </div>
+
             <div className="bg-white rounded-lg shadow-sm border p-4 mb-6">
               <h3 className="text-lg font-semibold text-gray-800 mb-2">Groups</h3>
               <p className="text-gray-500 mb-4">No groups yet</p>
@@ -226,6 +321,7 @@ function ProfilePage() {
                 Explore groups
               </button>
             </div>
+
             <div className="bg-white rounded-lg shadow-sm border p-4 mb-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold text-gray-800">Posts</h3>
@@ -256,67 +352,91 @@ function ProfilePage() {
             </div>
 
           </main>
-        </div>
-      </div>
 
-      {isEditingProfile && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-2xl w-full max-w-md p-6">
-            <h3 className="text-xl font-semibold mb-4">Edit Your Profile</h3>
-            <div className="space-y-4">
-              <input
-                type="text"
-                name="firstName"
-                value={editForm.firstName}
-                onChange={handleEditChange}
-                className="w-full p-2 border rounded-lg focus:ring-[#3a9bdc] focus:border-[#3a9bdc]"
-                placeholder="First Name"
-              />
-              <input
-                type="text"
-                name="lastName"
-                value={editForm.lastName}
-                onChange={handleEditChange}
-                className="w-full p-2 border rounded-lg focus:ring-[#3a9bdc] focus:border-[#3a9bdc]"
-                placeholder="Last Name"
-              />
-              <input
-                type="email"
-                name="email"
-                value={editForm.email}
-                onChange={handleEditChange}
-                className="w-full p-2 border rounded-lg focus:ring-[#3a9bdc] focus:border-[#3a9bdc]"
-                placeholder="Email"
-              />
-              <input
-                type="tel"
-                name="phoneNumber"
-                value={editForm.phoneNumber}
-                onChange={handleEditChange}
-                className="w-full p-2 border rounded-lg focus:ring-[#3a9bdc] focus:border-[#3a9bdc]"
-                placeholder="Phone Number"
-              />
-              <div className="flex gap-2 justify-end mt-4">
-                <button
-                  onClick={() => setIsEditingProfile(false)}
-                  className="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleSaveProfile}
-                  className="px-4 py-2 bg-[#3a9bdc] text-white rounded-lg hover:bg-[#2582c0] transition"
-                >
-                  Save Changes
-                </button>
+          {/* Modal Edit Profile */}
+          {isEditingProfile && (
+            <div className="fixed inset-0 bg-[rgba(0,0,0,0.6)] z-50 flex items-center justify-center p-4">
+              <div className="bg-white rounded-lg shadow-2xl w-full max-w-md p-6">
+                <h3 className="text-xl font-semibold mb-4">Edit Your Profile</h3>
+                <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
+                  <div className="flex gap-4">
+                    <div className="flex-1">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                      <input
+                        type="text"
+                        name="firstName"
+                        value={editForm.firstName}
+                        onChange={handleEditChange}
+                        className="w-full p-2 border rounded-lg focus:ring-[#3a9bdc] focus:border-[#3a9bdc]"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                      <input
+                        type="text"
+                        name="lastName"
+                        value={editForm.lastName}
+                        onChange={handleEditChange}
+                        className="w-full p-2 border rounded-lg focus:ring-[#3a9bdc] focus:border-[#3a9bdc]"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Bio</label>
+                    <textarea
+                      name="bio"
+                      value={editForm.bio}
+                      onChange={handleEditChange}
+                      className="w-full p-2 border rounded-lg focus:ring-[#3a9bdc] focus:border-[#3a9bdc]"
+                      placeholder="Ceritakan sedikit tentang diri Anda..."
+                      rows="3"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                    <input
+                      type="text"
+                      name="location"
+                      value={editForm.location}
+                      onChange={handleEditChange}
+                      className="w-full p-2 border rounded-lg focus:ring-[#3a9bdc] focus:border-[#3a9bdc]"
+                      placeholder="Misal: Pleasant and High"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Interests</label>
+                    <input
+                      type="text"
+                      name="interests"
+                      value={editForm.interests}
+                      onChange={handleEditChange}
+                      className="w-full p-2 border rounded-lg focus:ring-[#3a9bdc] focus:border-[#3a9bdc]"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Pisahkan dengan koma (misal: Memasak, Olahraga)</p>
+                  </div>
+                                    
+                  <div className="flex gap-2 justify-end pt-4 border-t">
+                    <button
+                      onClick={() => setIsEditingProfile(false)}
+                      className="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleSaveProfile}
+                      className="px-4 py-2 bg-[#3a9bdc] text-white rounded-lg hover:bg-[#2582c0] transition"
+                    >
+                      Save Changes
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      )}
-
-      <ChatPopup />
-    </div>
+          )}
+    </>
   );
 }
 
