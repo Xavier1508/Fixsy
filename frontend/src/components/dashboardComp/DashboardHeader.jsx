@@ -28,11 +28,13 @@ const DashboardHeader = ({ dynamicContent }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [dropdownRef]);
 
+  // 1. Logika baru untuk konten dinamis dikembalikan dan diperbaiki
+  const filters = dynamicContent?.filters || null;
+  const searchPlaceholder = dynamicContent?.searchPlaceholder || "Search for services, neighbors...";
+
   return (
-    // 2. Header DIBUAT STICKY DAN CLEAN (border-b)
     <header className="bg-white sticky top-0 z-30 border-b border-gray-200">
       <div className="px-4 md:px-6 lg:px-8">
-        {/* Bagian Atas Header (Search Bar, Ikon Profil) */}
         <div className="flex items-center justify-between h-16">
             
             <div className="flex-1 flex justify-center px-8">
@@ -43,7 +45,7 @@ const DashboardHeader = ({ dynamicContent }) => {
                   </span>
                   <input 
                     type="text"
-                    placeholder="Search for services, neighbors..."
+                    placeholder={searchPlaceholder}
                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#7abbe6] text-sm"
                   />
                 </div>
@@ -113,9 +115,9 @@ const DashboardHeader = ({ dynamicContent }) => {
           </div>
         </div>
       </div>
-      {dynamicContent && (
+      {filters && (
         <div className="px-4 md:px-6 lg:px-8">
-          {dynamicContent}
+          {filters}
         </div>
       )}
     </header>

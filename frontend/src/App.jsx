@@ -13,9 +13,9 @@ import GroupsPage from './pages/GroupsPage.jsx';
 import EventsPage from './pages/EventsPage.jsx';
 import SettingsPage from './pages/SettingsPage.jsx';
 import UnderDevelopmentPage from './pages/UnderDevelopmentPage.jsx';
-
-//anak dari event pages
 import EventDetailPage from './pages/EventDetailPage.jsx';
+import ForSaleDetailPage from './components/forSaleComp/ForSaleDetailPage.jsx';
+import { AuthContextProvider } from './context/AuthContextProvider.jsx';
 
 function App() {
   return (
@@ -31,7 +31,10 @@ function App() {
         <Route path="profile" element={<ProfilePage />} /> 
         
         <Route path="home" element={<HomePage />} /> 
+
         <Route path="forsale" element={<ForSalePage />} />
+        <Route path="forsale/:itemId" element={<ForSaleDetailPage />} />
+
         <Route path="news" element={<LocalNewsPage />} />
         <Route path="groups" element={<GroupsPage />} />
         <Route path="faves" element={<UnderDevelopmentPage />} />

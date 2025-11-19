@@ -7,8 +7,8 @@ const navLinks = [
   { icon: Home, label: 'Home', href: '/dashboard/home' },
   { icon: Tag, label: 'For Sale & Free', href: '/dashboard/forsale' },
   { icon: Newspaper, label: 'Local News', href: '/dashboard/news' },
-  { icon: Heart, label: 'Faves', href: '/dashboard/faves' },
-  { icon: MapPin, label: 'Treat Map', href: '/dashboard/treatmaps' },
+  // { icon: Heart, label: 'Faves', href: '/dashboard/faves' },
+  // { icon: MapPin, label: 'Treat Map', href: '/dashboard/treatmaps' },
   { icon: Users, label: 'Groups', href: '/dashboard/groups' },
   { icon: Calendar, label: 'Events', href: '/dashboard/events' },
 ];
