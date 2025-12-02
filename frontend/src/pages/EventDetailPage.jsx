@@ -17,7 +17,7 @@ const dummyEventDetail = {
   title: 'Cafe Palestina - An In-Person Talk and Conversation with Faisel Saleh',
   date: 'Sun, Nov 16, 1:30AM - 3AM',
   location: '175 Wendell Avenue, Pittsfield, MA',
-  image: 'https://img.nextdoor.com/image/upload/c_fill,f_auto,h_180,q_auto,w_320/ctph3q2qgxxopgjyf76u',
+  image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdkReiQf3QdKJO6Qh04XyTZMvxsisIznDA8Q&s',
   host: {
     name: 'Ivan Kruh',
     avatar: 'https://placehold.co/40x40/dbeafe/2563eb?text=I',

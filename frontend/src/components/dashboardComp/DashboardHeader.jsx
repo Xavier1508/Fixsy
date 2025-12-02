@@ -28,6 +28,20 @@ const DashboardHeader = ({ dynamicContent }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [dropdownRef]);
 
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = async () => {
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
+  const res = await fetch(
+    `http://localhost:5000/api/posts/search?q=${searchQuery}`,
+    { headers: { Authorization: `Bearer ${userInfo.token}` } }
+  );
+
+  const data = await res.json();
+  setPosts(data);
+};
+
   return (
     // 2. Header DIBUAT STICKY DAN CLEAN (border-b)
     <header className="bg-white sticky top-0 z-30 border-b border-gray-200">
@@ -45,6 +59,9 @@ const DashboardHeader = ({ dynamicContent }) => {
                     type="text"
                     placeholder="Search for services, neighbors..."
                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#7abbe6] text-sm"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                   />
                 </div>
               </div>

@@ -9,6 +9,7 @@ const MainFeed = ({ onOpenCreatePost }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   
+  
   const socket = useSocket();
   useEffect(() => {
     const fetchPosts = async () => {
@@ -61,10 +62,54 @@ const MainFeed = ({ onOpenCreatePost }) => {
     };
   }, [socket]); // Jalankan ulang efek ini jika 'socket' berubah
 
+  // --- FUNGSI HANDLE LIKE TANPA REFRESH ---
+const handleLike = async (postId) => {
+  try {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
+    const res = await fetch(`http://localhost:5000/api/posts/${postId}/like`, {
+      method: "PUT",
+      headers: {
+        "Authorization": `Bearer ${userInfo.token}`,
+        "Content-Type": "application/json"
+      }
+    });
+
+    if (!res.ok) throw new Error("Gagal menyukai postingan");
+
+    const data = await res.json(); // ambil liked dan likes terbaru
+
+    // Update state
+    setPosts(prev =>
+      prev.map(p =>
+        p._id === postId
+          ? { ...p, likes: data.likes }
+          : p
+      )
+    );
+
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+// const handleSearch = async () => {
+//   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
+//   const res = await fetch(
+//     `http://localhost:5000/api/posts/search?q=${searchQuery}`,
+//     { headers: { Authorization: `Bearer ${userInfo.token}` } }
+//   );
+
+//   const data = await res.json();
+//   setPosts(data);
+// };
+
   const createPostBox = (
       <div className="bg-white rounded-lg shadow border p-4 mb-5">
         <div className="flex items-center space-x-3">
-          <div className="h-9 w-9 rounded-full bg-gray-300 flex-shrink-0"></div>
+          {/* <div className="h-9 w-9 rounded-full bg-gray-300 flex-shrink-0"></div> */}
+          <img src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcST1PZ0utwAx2fkTBo8IXtCiELUk1DyeS8jEA&s"} alt="Profile"  className="h-9 w-9 rounded-full object-cover flex-shrink-0"/>
           <button
             onClick={onOpenCreatePost}
             className="w-full text-left bg-gray-100 rounded-full py-2 px-4 text-gray-600 hover:bg-gray-200 text-sm"
@@ -122,7 +167,7 @@ const tabs = (
   } else {
     content = posts.map(post => (
       // Gunakan '_id' dari MongoDB sebagai key
-      <PostCard key={post._id} post={post} />
+      <PostCard key={post._id} post={post} onLike={() => handleLike(post._id)}/>
     ));
   }
 

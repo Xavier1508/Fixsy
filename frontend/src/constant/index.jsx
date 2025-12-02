@@ -22,6 +22,7 @@ export const profile=[
 
 export const navItems = [
   { label: "How it works", href: "#"},
+  { label: "About", href: "/about"},
   { label: "Services", href: "#"},
   { label: "Help", href: "#"},
   { label: "Parters", href: "#",

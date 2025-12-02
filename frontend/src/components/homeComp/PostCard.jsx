@@ -1,10 +1,12 @@
 import React from 'react';
 import { ThumbsUp, MessageSquare, Send, MoreHorizontal, MapPin } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import axios from "axios";
 
 const BACKEND_URL = 'http://localhost:5000';
 
-const PostCard = ({ post }) => {
+const PostCard = ({ post, onLike }) => {
+  const [showMenu, setShowMenu] = React.useState(false);
   const user = post.user || { firstName: 'User', lastName: 'Name', profilePicture: null };
   const userName = `${user.firstName} ${user.lastName}`;
   
@@ -14,6 +16,46 @@ const PostCard = ({ post }) => {
   const timeAgo = post.createdAt
     ? formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })
     : 'just now';
+
+  const handleLike = async () => {
+  try {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
+    const res = await axios.put(`${BACKEND_URL}/api/posts/${post._id}/like`,
+      {},
+      { headers: { Authorization: `Bearer ${userInfo.token}` } }
+    );
+
+    // 🚀 Update like tanpa refresh!
+    onLike(post._id, res.data.likes);
+
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+const userId = userInfo ? userInfo._id : null;
+// cek apakah user sudah like
+const isLiked = post.likes.includes(userId);
+
+
+const handleDelete = async () => {
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  if (!userInfo) return;
+
+  try {
+    await axios.delete(`${BACKEND_URL}/api/posts/${post._id}`, {
+      headers: { Authorization: `Bearer ${userInfo.token}` }
+    });
+
+    onDelete(post._id);  // ➜ kasih tahu parent untuk hapus post dari list
+
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 
   return (
     <div className="bg-white rounded-lg shadow border">
@@ -45,9 +87,27 @@ const PostCard = ({ post }) => {
             </div>
           </div>
         </div>
-        <button className="p-2 rounded-full text-gray-500 hover:bg-gray-100">
-          <MoreHorizontal className="h-5 w-5" />
+        <div className="relative">
+  <button
+    className="p-2 rounded-full text-gray-500 hover:bg-gray-100"
+    onClick={() => setShowMenu(!showMenu)}
+  >
+    <MoreHorizontal className="h-5 w-5" />
+  </button>
+
+  {showMenu && (
+    <div className="absolute right-0 mt-2 bg-white shadow-md rounded-lg border w-32">
+      {post.user._id === currentUserId && (
+        <button
+          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+          onClick={handleDelete}
+        >
+          Delete
         </button>
+      )}
+    </div>
+  )}
+</div>
       </div>
 
       {/* Konten Postingan (Teks dan Gambar) */}
@@ -71,12 +131,12 @@ const PostCard = ({ post }) => {
       {/* Tombol Aksi (Like, Comment) */}
       <div className="flex justify-between items-center p-4 border-t">
         <div className="flex space-x-6">
-          <button className="flex items-center space-x-2 text-gray-600 hover:text-[#3a9bdc]">
-            <ThumbsUp className="h-5 w-5" />
-            <span className="font-medium text-sm">
-              {post.likes.length > 0 ? post.likes.length : 'Like'}
-            </span>
-          </button>
+          <button onClick={onLike} className={`flex items-center space-x-2 ${isLiked ? "text-[#3a9bdc]" : "text-gray-600"}  text-gray-600 hover:text-[#3a9bdc]`}>
+              <ThumbsUp className="h-5 w-5" />
+              <span className="font-medium text-sm">
+                {post.likes.length > 0 ? post.likes.length : 'Like'}
+              </span>
+            </button>
           <button className="flex items-center space-x-2 text-gray-600 hover:text-[#3a9bdc]">
             <MessageSquare className="h-5 w-5" />
             <span className="font-medium text-sm">

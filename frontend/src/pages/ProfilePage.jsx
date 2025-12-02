@@ -335,7 +335,7 @@ const handleEditChange = (e) => {
                   <p className="text-gray-800 font-medium">
                     {user.firstName} {user.lastName} <span className="text-gray-500 text-sm">- 26 Sep</span>
                   </p>
-                  <p className="text-gray-700">Xavier Renjiro just joined Fixsy.</p>
+                  <p className="text-gray-700">{user.firstName} just joined Fixsy.</p>
                   <div className="flex space-x-4 mt-2 text-gray-500">
                     <button className="flex items-center space-x-1 hover:text-[#3a9bdc]">
                       <Heart className="h-4 w-4" /> <span>0</span>

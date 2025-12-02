@@ -6,18 +6,18 @@ import { useHeader } from '../hooks/useHeader.jsx';
 
 const dummyItems = [
   // ... (Data dummy Anda, saya tambahkan agar jadi 12)
-  { id: 1, title: 'Black Dresser FREE', price: 'FREE', location: '3.5 mi - Pittsfield', image: 'https://placehold.co/300x200/e2e8f0/64748b?text=Fixsy' },
-  { id: 2, title: 'New Diamondback Cobra...', price: '$200', location: '9.7 mi - Lance', image: 'https://placehold.co/300x200/e2e8f0/64748b?text=Fixsy' },
-  { id: 3, title: 'Honda Power Equipment', price: 'Choose', location: '3.5 mi - Pittsfield', image: 'https://placehold.co/300x200/e2e8f0/64748b?text=Fixsy' },
-  { id: 4, title: 'Lightly Used Royal Alpha...', price: '$180', location: '9.7 mi - Lance', image: 'https://placehold.co/300x200/e2e8f0/64748b?text=Fixsy' },
-  { id: 5, title: 'Set of 5 Decorative Mugs', price: '$35', location: '1.9 day - 3.5 mi', image: 'https://placehold.co/300x200/e2e8f0/64748b?text=Fixsy' },
-  { id: 6, title: 'Brown Leather swivel chair', price: '$40', location: '1 day ago - 3.5 mi', image: 'https://placehold.co/300x200/e2e8f0/64748b?text=Fixsy' },
-  { id: 7, title: 'Round Velvet Ottoman', price: '$180', location: '1 day ago - 3.5 mi', image: 'https://placehold.co/300x200/e2e8f0/64748b?text=Fixsy' },
-  { id: 8, title: 'Cute Metal Patio Bench', price: '$150', location: '1 day ago - 3.5 mi', image: 'https://placehold.co/300x200/e2e8f0/64748b?text=Fixsy' },
-  { id: 9, title: 'Black Dresser FREE 2', price: 'FREE', location: '3.5 mi - Pittsfield', image: 'https://placehold.co/300x200/e2e8f0/64748b?text=Fixsy' },
-  { id: 10, title: 'New Diamondback Cobra 2', price: '$200', location: '9.7 mi - Lance', image: 'https://placehold.co/300x200/e2e8f0/64748b?text=Fixsy' },
-  { id: 11, title: 'Honda Power Equipment 2', price: 'Choose', location: '3.5 mi - Pittsfield', image: 'https://placehold.co/300x200/e2e8f0/64748b?text=Fixsy' },
-  { id: 12, title: 'Lightly Used Royal Alpha 2', price: '$180', location: '9.7 mi - Lance', image: 'https://placehold.co/300x200/e2e8f0/64748b?text=Fixsy' },
+  { id: 1, title: 'Black Dresser FREE', price: 'FREE', location: '3.5 mi - Pittsfield', image: 'https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcSh-ks3MFgTFLfTeWEWnPUPWS4BLTl3voPcjmJ4MO5b0w27wDSPXInrWPUtjTThutRdsbAdhRsYLBTQe2GGb9ftjRYAHWzIzrhEDYjGh9FvJ-BsOQDGWEbAnjs' },
+  { id: 2, title: 'New Diamondback Cobra...', price: '$200', location: '9.7 mi - Lance', image: 'https://m.media-amazon.com/images/I/41WVjQICsHL._AC_SY350_.jpg' },
+  { id: 3, title: 'Honda Power Equipment', price: 'Choose', location: '3.5 mi - Pittsfield', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQkt33oSiyekvahdIyamLgetO76VGt7L_CCg&s' },
+  { id: 4, title: 'Lightly Used Royal Alpha...', price: '$180', location: '9.7 mi - Lance', image: 'https://placehold.co/300x200/e2e8f0/64748b?text=For Sale' },
+  { id: 5, title: 'Set of 5 Decorative Mugs', price: '$35', location: '1.9 day - 3.5 mi', image: 'https://placehold.co/300x200/e2e8f0/64748b?text=For Sale' },
+  { id: 6, title: 'Brown Leather swivel chair', price: '$40', location: '1 day ago - 3.5 mi', image: 'https://placehold.co/300x200/e2e8f0/64748b?text=For Sale' },
+  { id: 7, title: 'Round Velvet Ottoman', price: '$180', location: '1 day ago - 3.5 mi', image: 'https://placehold.co/300x200/e2e8f0/64748b?text=For Sale' },
+  { id: 8, title: 'Cute Metal Patio Bench', price: '$150', location: '1 day ago - 3.5 mi', image: 'https://placehold.co/300x200/e2e8f0/64748b?text=For Sale' },
+  { id: 9, title: 'Black Dresser FREE 2', price: 'FREE', location: '3.5 mi - Pittsfield', image: 'https://placehold.co/300x200/e2e8f0/64748b?text=For Sale' },
+  { id: 10, title: 'New Diamondback Cobra 2', price: '$200', location: '9.7 mi - Lance', image: 'https://placehold.co/300x200/e2e8f0/64748b?text=For Sale' },
+  { id: 11, title: 'Honda Power Equipment 2', price: 'Choose', location: '3.5 mi - Pittsfield', image: 'https://placehold.co/300x200/e2e8f0/64748b?text=For Sale' },
+  { id: 12, title: 'Lightly Used Royal Alpha 2', price: '$180', location: '9.7 mi - Lance', image: 'https://placehold.co/300x200/e2e8f0/64748b?text=For Sale' },
 ];
 
 const ForSalePage = () => {

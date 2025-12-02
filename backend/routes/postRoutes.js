@@ -1,8 +1,13 @@
 // backend/routes/postRoutes.js
 import express from 'express';
 const router = express.Router();
-import { createPost, getPosts } from '../controllers/postController.js';
+import { createPost, getPosts, toggleLike, addComment , searchPosts} from '../controllers/postController.js';
 import { protect } from '../middleware/authMiddleware.js';
+
+router.put('/:id/like', protect, toggleLike);
+router.post('/:id/comment', protect, addComment);
+router.get("/search", protect, searchPosts);
+
 
 // 1. Impor middleware upload
 import upload from '../middleware/uploadMiddleware.js';

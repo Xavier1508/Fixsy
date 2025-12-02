@@ -12,7 +12,7 @@ const dummyNews = [
     publisher: { name: 'The Berkshire Eagle', avatar: 'https://placehold.co/40x40/f43f5e/ffffff?text=BE' },
     timestamp: '3 days ago',
     content: 'Hinsdale Pizza House offered free meals amid SNAP uncertainty. Then, residents started donating to cover them without being asked',
-    imageUrl: 'https://img.nextdoor.com/image/upload/c_fill,f_auto,h_360,q_auto,w_600/flnblm6ctcfqhmg2ma1y',
+    imageUrl: 'https://s3-media0.fl.yelpcdn.com/bphoto/0LUATnt4z7Cdf10szhxCWQ/348s.jpg',
     comments: 29,
     likes: 5,
   },

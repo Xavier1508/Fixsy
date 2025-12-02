@@ -1,6 +1,21 @@
 // backend/controllers/postController.js
 import Post from '../models/Post.js';
 
+const searchPosts = async (req, res) => {
+  try {
+    const { query } = req.query;
+    if (!query){
+      return res.status(200).json([]);
+    }
+    const posts = await Post.find({content:{ $regex:query, $options: "i"}})
+      .populate("user", "firstName lastName profilePicture")
+      .sort({createdAt:-1});
+      res.json(posts);
+  } catch (error) {
+    res.status(500).json({message: error.message});
+  }
+};
+
 // @desc    Membuat postingan baru
 // @route   POST /api/posts
 // @access  Private
@@ -68,4 +83,71 @@ const getPosts = async (req, res) => {
   }
 };
 
-export { createPost, getPosts };
+
+// @desc    Add comment to post
+// @route   POST /api/posts/:id/comment
+// @access  Private
+const addComment = async (req, res) => {
+  try {
+    const { text } = req.body;
+
+    if (!text) return res.status(400).json({ message: "Comment cannot be empty" });
+
+    const post = await Post.findById(req.params.id);
+
+    if (!post) return res.status(404).json({ message: "Post not found" });
+
+    const comment = {
+      user: req.user._id,
+      text,
+      name: `${req.user.firstName} ${req.user.lastName}`
+    };
+
+    post.comments.push(comment);
+
+    await post.save();
+
+    res.json(post.comments);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// @desc    Like or Unlike Post
+// @route   PUT /api/posts/:id/like
+// @access  Private
+const toggleLike = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    const userId = req.user._id.toString();
+
+    // CEK: Apakah user sudah like?
+    const alreadyLiked = post.likes.includes(userId);
+
+    if (alreadyLiked) {
+      // Jika sudah like → UNLIKE (hapus)
+      post.likes = post.likes.filter(id => id.toString() !== userId);
+    } else {
+      // Jika belum like → tambahkan
+      post.likes.push(userId);
+    }
+
+    await post.save();
+
+    res.json({ 
+      likes: post.likes,
+      liked: !alreadyLiked 
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+export { createPost, getPosts, toggleLike, addComment, searchPosts};
