@@ -84,7 +84,7 @@ You will need to run the backend and frontend servers in two separate terminals.
     cd frontend
     npm run dev
     ```
-    The application will be available to view in your browser at `http://localhost:5173` (or the port specified in your terminal).
+    The application will be available to view in your browser at `http://localhost:5173` (or the port specified in your terminal)
 
 ## License
 
